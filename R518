@@ -1,0 +1,33 @@
+---
+title: "05-18-In-class exercises-1"
+author: "TJLee"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: test
+    highlight: github
+
+---
+
+```{r}
+dta <- data.frame(Country = c("Taiwan"))
+library(rworldmap)
+library(countrycode)
+
+# a data.frame with the ISO3 country names plus a variable to
+# merge to the map data
+dta$Country <- countrycode(dta[,1], "country.name", "iso3c")
+head(dta)
+dta$Ebola <- rep(1, length(dta$Country))
+
+mapDevice("x11")
+
+# join the data.frame to the country map data
+ebolaMap <- joinCountryData2Map(dta, joinCode = "ISO3", nameJoinColumn = "Country")
+
+# plot it, the color palette's first color is red
+mapCountryData(ebolaMap, nameColumnToPlot = "Ebola", catMethod = "categorical",
+               addLegend = FALSE, mapTitle ="Countries I Have Visited So Far ", missingCountryCol = gray(.9))
+#
+dev.off()
+###
